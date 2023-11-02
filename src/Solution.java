@@ -66,6 +66,16 @@ public class Solution {
             return changed;
         }
 
+        private boolean setTo(char character) {
+            boolean changed = false;
+            if (this.CellChar=='.' & this.AllowedChars.contains(character)) {
+                this.CellChar=character;
+                this.AllowedChars = new HashSet<Character>();
+                this.AllowedChars.add(character);
+                changed = true;
+            }
+            return changed;
+        }
 
         private boolean tryCompareAndPurge(SudokuCell cell, SudokuCell rival) {
             boolean changed = false;
@@ -77,6 +87,34 @@ public class Solution {
             return changed;
         }
 
+        private boolean tryReversePurge(SudokuCell cell, Set<SudokuCell> rivals) {
+            boolean changed = false;
+            char setToChar = '.';
+            for (Character character : cell.AllowedChars){
+                boolean metElsewhere = false;
+                for (SudokuCell rivalCell : rivals){
+                    if (rivalCell.AllowedChars.contains(character)){
+                        metElsewhere = true;
+                        break;
+                    }
+                }
+                if (!metElsewhere){
+                    if (cell.CellChar=='.'){
+                        setToChar=character;
+                        changed = true;
+                        break;
+                    }
+
+                }
+
+            }
+            if (changed) {
+                this.setTo(setToChar);
+                for (SudokuCell rival : rivals) rival.straighten();
+            }
+
+            return changed;
+        }
 
         private boolean purgeDirectly() {
             boolean changed = false;
@@ -95,6 +133,16 @@ public class Solution {
             return changed;
 
         }
+
+        private boolean purgeInReverse() {
+            boolean changed = false;
+                changed = changed | tryReversePurge(this, this.HRivals);
+                changed = changed | tryReversePurge(this, this.VRivals);
+                changed = changed | tryReversePurge(this, this.BRivals);
+            return changed;
+
+        }
+
 
     }
 
@@ -184,6 +232,15 @@ public class Solution {
 
         }
 
+        private boolean doReversePurge() {
+            boolean changed = false;
+            for (int x = 0; x < 9; x++)
+                for (int y = 0; y < 9; y++)
+                    changed = changed | this.Cells[x][y].purgeInReverse();
+            return changed;
+
+        }
+
 
         private boolean doBruteForceOne() {
             boolean changed = false;
@@ -269,6 +326,7 @@ public class Solution {
             boolean changed = true;
             while (changed) {
                 changed = this.doDirectPurge();
+                //changed = changed | this.doReversePurge();  /// TODO : finish RP
                 changed = changed | this.doBruteForceOne();
             }
             int upToDepth = 1;

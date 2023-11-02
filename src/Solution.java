@@ -169,7 +169,7 @@ public class Solution {
                         if (k != i)
                             this.Cells[i][j].addHRival(this.Cells[k][j]);
                         if (k != j)
-                            this.Cells[i][j].addHRival(this.Cells[i][k]);
+                            this.Cells[i][j].addVRival(this.Cells[i][k]);
                     }
                 }
             }
@@ -179,7 +179,7 @@ public class Solution {
                     for (int m = (i / 3) * 3; m < (i / 3 + 1) * 3; m++) {
                         for (int n = (j / 3) * 3; n < (j / 3 + 1) * 3; n++) {
                             if (i != m & j != n)
-                                this.Cells[i][j].addHRival(this.Cells[m][n]);
+                                this.Cells[i][j].addBRival(this.Cells[m][n]);
                         }
                     }
                 }

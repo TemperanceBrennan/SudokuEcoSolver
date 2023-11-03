@@ -326,7 +326,7 @@ public class Solution {
             boolean changed = true;
             while (changed) {
                 changed = this.doDirectPurge();
-                //changed = changed | this.doReversePurge();  /// TODO : finish RP
+                changed = changed | this.doReversePurge();  /// TODO : finish RP
                 changed = changed | this.doBruteForceOne();
             }
             int upToDepth = 1;
